@@ -3,6 +3,8 @@ require("@parity/hardhat-polkadot");
 
 require("dotenv").config();
 
+const usePolkaVM = process.env.USE_POLKAVM === "true";
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: "0.8.28",
@@ -10,18 +12,20 @@ module.exports = {
     compilerSource: "npm",
   },
   networks: {
-    hardhat: {
-      polkavm: true,
-      nodeConfig: {
-        nodeBinaryPath: "../bin/substrate-node",
-        rpcPort: 8000,
-        dev: true,
-      },
-      adapterConfig: {
-        adapterBinaryPath: "../bin/eth-rpc",
-        dev: true,
-      },
-    },
+    hardhat: usePolkaVM
+      ? {
+          polkavm: true,
+          nodeConfig: {
+            nodeBinaryPath: "../bin/substrate-node",
+            rpcPort: 8000,
+            dev: true,
+          },
+          adapterConfig: {
+            adapterBinaryPath: "../bin/eth-rpc",
+            dev: true,
+          },
+        }
+      : {},
     localNode: {
       polkavm: true,
       url: `http://127.0.0.1:8545`,
