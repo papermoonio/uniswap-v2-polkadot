@@ -4,6 +4,8 @@ node_modules
 # Hardhat files
 /cache-pvm
 /artifacts-pvm
+artifacts
+cache
 
 # TypeChain files
 /typechain
