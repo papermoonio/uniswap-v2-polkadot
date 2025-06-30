@@ -31,9 +31,9 @@ adapterBinaryPath: Set this to the local path of your eth-rpc binary.
 How to Test
 
 ```bash
-# For Local node 
-npx hardhat test --network localNode
+# For Local node
+USE_POLKAVM=true npx hardhat test --network localNode
 
 # For Westend Hub
-npx hardhat test --network westendHub
+USE_POLKAVM=true npx hardhat test --network passetHub
 ```
