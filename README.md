@@ -28,7 +28,7 @@ nodeBinaryPath: Set this to the local path of your substrate-node binary.
 adapterBinaryPath: Set this to the local path of your eth-rpc binary.
 ```
 
-How to Test
+## How to Test
 
 ```bash
 # For Local node
@@ -36,4 +36,13 @@ USE_POLKAVM=true npx hardhat test --network localNode
 
 # For Westend Hub
 USE_POLKAVM=true npx hardhat test --network passetHub
+```
+
+## Compatibility with EVM
+```
+# test on polkavm
+USE_POLKAVM=true npx hardhat test
+
+# test on EVM
+npx hardhat test
 ```
