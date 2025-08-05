@@ -40,7 +40,7 @@ let factory;
     // while pallet-revive now require the code exists on chain
     // before it is deployed inside a contract.
     let UniswapV2Pair;
-    if (hre.network.name == 'polkavm' || hre.network.name == 'ah') {
+    if (hre.network.polkavm === true) {
       UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair", getWallets(1)[0]);
     } else {
       UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
@@ -49,7 +49,7 @@ let factory;
     let pair = await UniswapV2Pair.deploy();
     await pair.waitForDeployment();
 
-    const ERC20 = await ethers.getContractFactory("ERC20", deployer);
+    const ERC20 = await ethers.getContractFactory("contracts/test/ERC20.sol:ERC20");
     token = await ERC20.deploy(TOTAL_SUPPLY);
     await token.waitForDeployment();
 

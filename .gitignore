@@ -1,11 +1,12 @@
 node_modules
 .env
+bin
 
 # Hardhat files
 /cache-pvm
 /artifacts-pvm
-artifacts
-cache
+/cache
+/artifacts
 
 # TypeChain files
 /typechain

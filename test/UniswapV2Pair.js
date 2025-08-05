@@ -25,13 +25,13 @@ describe('UniswapV2Pair', function() {
     [wallet, other] = await ethers.getSigners();
 
     let UniswapV2Pair;
-    if (hre.network.name == 'polkavm' || hre.network.name == 'ah') {
+    if (hre.network.polkavm === true) {
       UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair", getWallets(1)[0]);
     } else {
       UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
     }
 
-    const ERC20 = await ethers.getContractFactory("ERC20");
+    const ERC20 = await ethers.getContractFactory("contracts/test/ERC20.sol:ERC20");
     token0 = await ERC20.deploy(TOTAL_SUPPLY);
     await token0.waitForDeployment();
 

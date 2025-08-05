@@ -23,7 +23,7 @@ describe('UniswapV2ERC20', function () {
   let other;
   
   beforeEach(async function () {
-    const ERC20 = await ethers.getContractFactory("ERC20");
+    const ERC20 = await ethers.getContractFactory("contracts/test/ERC20.sol:ERC20");
 
     token = await ERC20.deploy(TOTAL_SUPPLY);
     await token.waitForDeployment();

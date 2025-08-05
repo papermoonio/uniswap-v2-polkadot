@@ -16,12 +16,12 @@ module.exports = {
       ? {
           polkavm: true,
           nodeConfig: {
-            nodeBinaryPath: "../bin/substrate-node",
+            nodeBinaryPath: "../substrate-node",
             rpcPort: 8000,
             dev: true,
           },
           adapterConfig: {
-            adapterBinaryPath: "../bin/eth-rpc",
+            adapterBinaryPath: "../eth-rpc",
             dev: true,
           },
         }

@@ -1,5 +1,5 @@
 {
-  "name": "uniswap-v2-polkadot",
+  "name": "v2-core-polkadot",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "description": "",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "@parity/hardhat-polkadot": "^0.1.5",
-    "dotenv": "^16.5.0"
+    "@parity/hardhat-polkadot": "^0.1.8",
+    "dotenv": "^17.2.1",
+    "solc": "0.8.28"
   }
 }
