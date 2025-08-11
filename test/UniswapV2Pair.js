@@ -19,7 +19,6 @@ describe('UniswapV2Pair', function() {
   let wallet;
   let other;
 
-  const network = require('hardhat').network;
   beforeEach(async function() {
 
     [wallet, other] = await ethers.getSigners();
@@ -48,13 +47,19 @@ describe('UniswapV2Pair', function() {
     let token0Address = await token0.getAddress();
     let token1Address = await token1.getAddress();
 
-    [token0, token1] = token0Address < token1Address ? 
+    console.log("token0Address", token0Address);
+    console.log("token1Address", token1Address);
+
+    [token0, token1] = token0Address.toLowerCase() < token1Address.toLowerCase() ? 
     [token0, token1] : 
     [token1, token0];
 
     let first = await token0.getAddress();
     let second = await token1.getAddress();
 
+    console.log("first", first);
+    console.log("second", second);
+    
     const bytecode = UniswapV2Pair.bytecode;
     const initCodeHash = keccak256(bytecode);
     let salt = keccak256(solidityPacked(['address', 'address'], [first, second]));
@@ -207,7 +212,8 @@ describe('UniswapV2Pair', function() {
 
     const expectedLiquidity = expandTo18Decimals(3);
     await pair.transfer(await pair.getAddress(), expectedLiquidity - MINIMUM_LIQUIDITY);
-    await expect(pair.burn(wallet.address))
+    let receipt = await pair.burn(wallet.address);
+    await expect(receipt)
       .to.emit(pair, 'Transfer')
       .withArgs(await pair.getAddress(), ZeroAddress, expectedLiquidity - MINIMUM_LIQUIDITY)
       .to.emit(token0, 'Transfer')
@@ -282,7 +288,8 @@ describe('UniswapV2Pair', function() {
 
     const expectedLiquidity = expandTo18Decimals(1000);
     await pair.transfer(await pair.getAddress(), expectedLiquidity - MINIMUM_LIQUIDITY);
-    await pair.burn(wallet.address);
+    let receipt = await pair.burn(wallet.address);
+    await receipt.wait();
     expect(await pair.totalSupply()).to.eq(MINIMUM_LIQUIDITY);
   });
 
@@ -298,7 +305,7 @@ describe('UniswapV2Pair', function() {
     const swapAmount = expandTo18Decimals(1);
     const expectedOutputAmount = BigInt('996006981039903216');
     await token1.transfer(await pair.getAddress(), swapAmount);
-    await pair.swap(expectedOutputAmount, 0, wallet.address, '0x');
+    await (await pair.swap(expectedOutputAmount, 0, wallet.address, '0x')).wait();
 
     const expectedLiquidity = expandTo18Decimals(1000);
     await pair.transfer(await pair.getAddress(), expectedLiquidity - MINIMUM_LIQUIDITY);

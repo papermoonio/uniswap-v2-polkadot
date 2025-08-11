@@ -31,8 +31,8 @@ describe('UniswapV2ERC20', function () {
 
     let value;
 
-    if (hre.network.name === 'localNode') {
-      value = ethers.parseEther('1000000') // Local node has higher gas fees
+    if (hre.network.name === 'local') {
+      value = ethers.parseEther('1000') // Local node has higher gas fees
     } else {
       value = ethers.parseEther('1')
     }

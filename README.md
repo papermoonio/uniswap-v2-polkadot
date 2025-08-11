@@ -7,6 +7,7 @@ Ensure that you have substrate-node, eth-rpc and local resolc binaries on your l
 ```bash
 git clone https://github.com/paritytech/polkadot-sdk
 cd polkadot-sdk
+git checkout c40b36c3a7c208f9a6837b80812473af3d9ba7f7
 cargo build --bin substrate-node --release
 cargo build -p pallet-revive-eth-rpc --bin eth-rpc --release
 ```

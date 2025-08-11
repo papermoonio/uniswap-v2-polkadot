@@ -39,13 +39,13 @@ let factory;
     // NOTE: It's not necessary to deploy the pair contract
     // while pallet-revive now require the code exists on chain
     // before it is deployed inside a contract.
-    // let UniswapV2Pair;
-    // if (hre.network.polkavm === true) {
-    //   UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair", getWallets(1)[0]);
-    // } else {
-    //   UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
-    // }
-    const UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
+    let UniswapV2Pair;
+    if (hre.network.polkavm === true) {
+      UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair", getWallets(1)[0]);
+    } else {
+      UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
+    }
+    // const UniswapV2Pair = await ethers.getContractFactory("UniswapV2Pair");
     let pair = await UniswapV2Pair.deploy();
     await pair.waitForDeployment();
 
