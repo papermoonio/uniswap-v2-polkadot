@@ -11,17 +11,20 @@ module.exports = {
   resolc: {
     compilerSource: "npm",
   },
+  mocha: {
+    timeout: 100000000,
+  },
   networks: {
     hardhat: usePolkaVM
       ? {
           polkavm: true,
           nodeConfig: {
-            nodeBinaryPath: "../substrate-node",
+            nodeBinaryPath: "../../revive-dev-node",
             rpcPort: 8000,
             dev: true,
           },
           adapterConfig: {
-            adapterBinaryPath: "../eth-rpc",
+            adapterBinaryPath: "../../eth-rpc",
             dev: true,
           },
         }
