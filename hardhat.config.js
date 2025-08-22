@@ -56,13 +56,17 @@ const { argv } = require('yargs/yargs')()
     },
   });
 
+  const usePolkaVM = process.env.USE_POLKAVM === "true";
+
 require('@nomicfoundation/hardhat-chai-matchers');
 require('@nomicfoundation/hardhat-ethers');
-require('hardhat-exposed');
+// require('hardhat-exposed');
 require('hardhat-gas-reporter');
-require('hardhat-ignore-warnings');
+// require('hardhat-ignore-warnings');
+require('hardhat-predeploy');
 require('solidity-coverage');
 require('solidity-docgen');
+require('@parity/hardhat-polkadot');
 
 for (const f of fs.readdirSync(path.join(__dirname, 'hardhat'))) {
   require(path.join(__dirname, 'hardhat', f));
@@ -84,19 +88,42 @@ module.exports = {
       outputSelection: { '*': { '*': ['storageLayout'] } },
     },
   },
-  warnings: {
-    'contracts-exposed/**/*': {
-      'code-size': 'off',
-      'initcode-size': 'off',
-    },
-    '*': {
-      'unused-param': !argv.coverage, // coverage causes unused-param warnings
-      'transient-storage': false,
-      default: 'error',
+  resolc: {
+    compilerSource: "binary",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: argv.runs,
+        compilerPath: "resolc-0.3.0",
+      },
     },
   },
+  // warnings: {
+  //   'contracts-exposed/**/*': {
+  //     'code-size': 'off',
+  //     'initcode-size': 'off',
+  //   },
+  //   '*': {
+  //     'unused-param': !argv.coverage, // coverage causes unused-param warnings
+  //     'transient-storage': false,
+  //     default: 'error',
+  //   },
+  // },
   networks: {
-    hardhat: {
+    hardhat: usePolkaVM
+    ? {
+        polkavm: true,
+        nodeConfig: {
+          nodeBinaryPath: "../revive-dev-node",
+          rpcPort: 8000,
+          dev: true,
+        },
+        adapterConfig: {
+          adapterBinaryPath: "../eth-rpc",
+          dev: true,
+        },
+      }
+    : {
       hardfork: argv.evm,
       // Exposed contracts often exceed the maximum contract size. For normal contract,
       // we rely on the `code-size` compiler warning, that will cause a compilation error.
@@ -105,11 +132,11 @@ module.exports = {
       enableRip7212: true,
     },
   },
-  exposed: {
-    imports: true,
-    initializers: true,
-    exclude: ['vendor/**/*', '**/*WithInit.sol'],
-  },
+  // exposed: {
+  //   imports: true,
+  //   initializers: true,
+  //   exclude: ['vendor/**/*', '**/*WithInit.sol'],
+  // },
   gasReporter: {
     enabled: argv.gas,
     showMethodSig: true,
