@@ -14,10 +14,22 @@ task("start-pvm-node", "Start PVM node for EVM bytecode testing")
       return;
     }
 
-    // Use relative paths from project root
+    // Read from hardhat config
+    const networkConfig = hre.config.networks.hardhat;
     const projectRoot = hre.config.paths.root;
-    const nodeBinaryPath = path.resolve(projectRoot, "../revive-dev-node-darwin-arm64");
-    const adapterBinaryPath = path.resolve(projectRoot, "../eth-rpc-darwin-arm64");
+    
+    // Get paths from config or use defaults
+    const nodeBinaryPath = networkConfig.nodeConfig?.nodeBinaryPath 
+      ? path.resolve(projectRoot, networkConfig.nodeConfig.nodeBinaryPath)
+      : path.resolve(projectRoot, "../revive-dev-node-darwin-arm64");
+    
+    const adapterBinaryPath = networkConfig.adapterConfig?.adapterBinaryPath
+      ? path.resolve(projectRoot, networkConfig.adapterConfig.adapterBinaryPath)
+      : path.resolve(projectRoot, "../eth-rpc-darwin-arm64");
+    
+    // Use configured ports or provided parameters
+    const finalNodePort = networkConfig.nodeConfig?.rpcPort || nodePort;
+    const finalAdapterPort = adapterPort;
 
     console.log(chalk.blue("Starting PVM node for EVM mode..."));
     console.log(chalk.gray(`Node binary: ${nodeBinaryPath}`));
@@ -26,12 +38,12 @@ task("start-pvm-node", "Start PVM node for EVM bytecode testing")
     // Start substrate node
     const nodeArgs = [
       "--dev",
-      "--rpc-port", nodePort.toString(),
+      "--rpc-port", finalNodePort.toString(),
       "--rpc-cors", "all", 
       "--rpc-methods", "unsafe",
     ];
 
-    console.log(chalk.blue(`Starting Substrate node on port ${nodePort}...`));
+    console.log(chalk.blue(`Starting Substrate node on port ${finalNodePort}...`));
     const nodeProcess = spawn(nodeBinaryPath, nodeArgs, {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false
@@ -51,12 +63,12 @@ task("start-pvm-node", "Start PVM node for EVM bytecode testing")
 
     // Start eth-rpc adapter
     const adapterArgs = [
-      "--node-rpc-url", `ws://localhost:${nodePort}`,
-      "--listen-addr", `0.0.0.0:${adapterPort}`,
+      "--node-rpc-url", `ws://localhost:${finalNodePort}`,
+      "--listen-addr", `0.0.0.0:${finalAdapterPort}`,
       "--dev"
     ];
 
-    console.log(chalk.blue(`Starting ETH RPC adapter on port ${adapterPort}...`));
+    console.log(chalk.blue(`Starting ETH RPC adapter on port ${finalAdapterPort}...`));
     const adapterProcess = spawn(adapterBinaryPath, adapterArgs, {
       stdio: ["ignore", "pipe", "pipe"],
       detached: false
@@ -74,8 +86,8 @@ task("start-pvm-node", "Start PVM node for EVM bytecode testing")
     console.log(chalk.blue("Waiting for adapter to initialize..."));
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    console.log(chalk.green(`✅ PVM node running on ws://localhost:${nodePort}`));
-    console.log(chalk.green(`✅ ETH RPC adapter running on http://localhost:${adapterPort}`));
+    console.log(chalk.green(`✅ PVM node running on ws://localhost:${finalNodePort}`));
+    console.log(chalk.green(`✅ ETH RPC adapter running on http://localhost:${finalAdapterPort}`));
     console.log(chalk.blue("You can now run tests with: npx hardhat test"));
     console.log(chalk.gray("Press Ctrl+C to stop both services"));
 
@@ -203,9 +215,21 @@ if (process.env.REVM === "true" && process.env.POLKA_NODE === "true") {
 
 // Helper function to start PVM services
 async function startPVMServices(hre, nodePort = 8000, adapterPort = 8545) {
+  const networkConfig = hre.config.networks.hardhat;
   const projectRoot = hre.config.paths.root;
-  const nodeBinaryPath = path.resolve(projectRoot, "../revive-dev-node-darwin-arm64");
-  const adapterBinaryPath = path.resolve(projectRoot, "../eth-rpc-darwin-arm64");
+  
+  // Read from config or use defaults
+  const nodeBinaryPath = networkConfig.nodeConfig?.nodeBinaryPath 
+    ? path.resolve(projectRoot, networkConfig.nodeConfig.nodeBinaryPath)
+    : path.resolve(projectRoot, "../revive-dev-node-darwin-arm64");
+  
+  const adapterBinaryPath = networkConfig.adapterConfig?.adapterBinaryPath
+    ? path.resolve(projectRoot, networkConfig.adapterConfig.adapterBinaryPath)
+    : path.resolve(projectRoot, "../eth-rpc-darwin-arm64");
+  
+  // Use configured ports or provided parameters
+  const finalNodePort = networkConfig.nodeConfig?.rpcPort || nodePort;
+  const finalAdapterPort = adapterPort;
 
   console.log(chalk.gray(`Node binary: ${nodeBinaryPath}`));
   console.log(chalk.gray(`Adapter binary: ${adapterBinaryPath}`));
@@ -222,12 +246,12 @@ async function startPVMServices(hre, nodePort = 8000, adapterPort = 8545) {
   // Start substrate node  
   const nodeArgs = [
     "--dev",
-    "--rpc-port", nodePort.toString(),
+    "--rpc-port", finalNodePort.toString(),
     "--rpc-cors", "all", 
     "--rpc-methods", "unsafe"
   ];
 
-  console.log(chalk.blue(`Starting Substrate node on port ${nodePort}...`));
+  console.log(chalk.blue(`Starting Substrate node on port ${finalNodePort}...`));
   const nodeProcess = spawn(nodeBinaryPath, nodeArgs, {
     stdio: ["ignore", "ignore", "ignore"], // Silent mode
     detached: false
@@ -238,13 +262,13 @@ async function startPVMServices(hre, nodePort = 8000, adapterPort = 8545) {
 
   // Start eth-rpc adapter
   const adapterArgs = [
-    "--node-rpc-url", `ws://localhost:${nodePort}`,
-    "--rpc-port", adapterPort.toString(),
+    "--node-rpc-url", `ws://localhost:${finalNodePort}`,
+    "--rpc-port", finalAdapterPort.toString(),
     "--rpc-cors", "all",
     "--dev"
   ];
 
-  console.log(chalk.blue(`Starting ETH RPC adapter on port ${adapterPort}...`));
+  console.log(chalk.blue(`Starting ETH RPC adapter on port ${finalAdapterPort}...`));
   const adapterProcess = spawn(adapterBinaryPath, adapterArgs, {
     stdio: ["ignore", "ignore", "ignore"], // Silent mode
     detached: false
