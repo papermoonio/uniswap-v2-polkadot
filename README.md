@@ -33,17 +33,21 @@ adapterBinaryPath: Set this to the local path of your eth-rpc binary.
 
 ```bash
 # For Local node
-USE_POLKAVM=true npx hardhat test --network localNode
+POLKA_NODE=true npx hardhat test --network localNode
 
 # For Westend Hub
-USE_POLKAVM=true npx hardhat test --network passetHub
+POLKA_NODE=true npx hardhat test --network passetHub
 ```
 
 ## Compatibility with EVM
+
 ```
-# test on polkavm
-USE_POLKAVM=true npx hardhat test
+# test polkavm on polka node
+POLKA_NODE=true npx hardhat test
 
 # test on EVM
 npx hardhat test
+
+# test evm on polka node
+POLKA_NODE=true REVM=true npx hardhat test
 ```

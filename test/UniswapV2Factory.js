@@ -107,19 +107,23 @@ let factory;
 
   it('setFeeTo', async function() {
     this.timeout(1000000000000);
-    await expect(factory.connect(other).setFeeTo(other.address))
+    let otherAddress = await other.getAddress();
+    let walletAddress = await wallet.getAddress();
+    await expect(factory.connect(other).setFeeTo(otherAddress))
       .to.be.revertedWith('UniswapV2: FORBIDDEN');
-    await factory.setFeeTo(wallet.address);
-    expect(await factory.feeTo()).to.eq(wallet.address);
+    await factory.setFeeTo(walletAddress);
+    expect(await factory.feeTo()).to.eq(walletAddress);
   });
 
   it('setFeeToSetter', async function() {
-    await expect(factory.connect(other).setFeeToSetter(other.address))
+    let otherAddress = await other.getAddress();
+    let walletAddress = await wallet.getAddress();
+    await expect(factory.connect(other).setFeeToSetter(otherAddress))
       .to.be.revertedWith('UniswapV2: FORBIDDEN');
 
-    await factory.setFeeToSetter(other.address);
-    expect(await factory.feeToSetter()).to.eq(other.address);
-    await expect(factory.setFeeToSetter(wallet.address))
+    await factory.setFeeToSetter(otherAddress);
+    expect(await factory.feeToSetter()).to.eq(otherAddress);
+    await expect(factory.setFeeToSetter(walletAddress))
       .to.be.revertedWith('UniswapV2: FORBIDDEN');
   });
 });

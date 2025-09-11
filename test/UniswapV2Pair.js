@@ -47,18 +47,12 @@ describe('UniswapV2Pair', function() {
     let token0Address = await token0.getAddress();
     let token1Address = await token1.getAddress();
 
-    console.log("token0Address", token0Address);
-    console.log("token1Address", token1Address);
-
     [token0, token1] = token0Address.toLowerCase() < token1Address.toLowerCase() ? 
     [token0, token1] : 
     [token1, token0];
 
     let first = await token0.getAddress();
     let second = await token1.getAddress();
-
-    console.log("first", first);
-    console.log("second", second);
     
     const bytecode = UniswapV2Pair.bytecode;
     const initCodeHash = keccak256(bytecode);
@@ -255,24 +249,24 @@ describe('UniswapV2Pair', function() {
   //   const updatedReserves = await pair.getReserves();
   //   expect(updatedReserves[2]).to.eq(blockTimestamp + BigInt(1));
 
-    // const swapAmount = expandTo18Decimals(3);
-    // await token0.transfer(await pair.getAddress(), swapAmount);
-    // await mineBlock(provider, blockTimestamp + 10);
-    // await pair.swap(0, expandTo18Decimals(1), wallet.address, '0x');
+  //   const swapAmount = expandTo18Decimals(3);
+  //   await token0.transfer(await pair.getAddress(), swapAmount);
+  //   await mineBlock(provider, blockTimestamp + 10);
+  //   await pair.swap(0, expandTo18Decimals(1), wallet.address, '0x');
 
-    // expect(await pair.price0CumulativeLast()).to.eq(initialPrice[0] * BigInt(10));
-    // expect(await pair.price1CumulativeLast()).to.eq(initialPrice[1] * BigInt(10));
-    // const latestReserves = await pair.getReserves();
-    // expect(latestReserves[2]).to.eq(blockTimestamp + 10);
+  //   expect(await pair.price0CumulativeLast()).to.eq(initialPrice[0] * BigInt(10));
+  //   expect(await pair.price1CumulativeLast()).to.eq(initialPrice[1] * BigInt(10));
+  //   const latestReserves = await pair.getReserves();
+  //   expect(latestReserves[2]).to.eq(blockTimestamp + 10);
 
-    // await mineBlock(provider, blockTimestamp + 20);
-    // await pair.sync();
+  //   await mineBlock(provider, blockTimestamp + 20);
+  //   await pair.sync();
 
-    // const newPrice = encodePrice(expandTo18Decimals(6), expandTo18Decimals(2));
-    // expect(await pair.price0CumulativeLast()).to.eq(initialPrice[0]* bigInt(10) + newPrice[0] * BigInt(10));
-    // expect(await pair.price1CumulativeLast()).to.eq(initialPrice[1] * BigInt(10) + (newPrice[1] * BigInt(10)));
-    // const finalReserves = await pair.getReserves();
-    // expect(finalReserves[2]).to.eq(blockTimestamp + 20);
+  //   const newPrice = encodePrice(expandTo18Decimals(6), expandTo18Decimals(2));
+  //   expect(await pair.price0CumulativeLast()).to.eq(initialPrice[0]* bigInt(10) + newPrice[0] * BigInt(10));
+  //   expect(await pair.price1CumulativeLast()).to.eq(initialPrice[1] * BigInt(10) + (newPrice[1] * BigInt(10)));
+  //   const finalReserves = await pair.getReserves();
+  //   expect(finalReserves[2]).to.eq(blockTimestamp + 20);
   // });
 
   it('feeTo:off', async function() {
