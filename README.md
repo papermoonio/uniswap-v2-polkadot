@@ -42,12 +42,10 @@ POLKA_NODE=true npx hardhat test --network passetHub
 ## Compatibility with EVM
 
 ```
-# test polkavm on polka node
-POLKA_NODE=true npx hardhat test
 
 # test on EVM
 npx hardhat test
 
-# test evm on polka node
-POLKA_NODE=true REVM=true npx hardhat test
+# test revm on polka node
+npx hardhat test --network local
 ```
